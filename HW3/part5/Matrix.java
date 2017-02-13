@@ -14,15 +14,22 @@ public class Matrix extends Sequence{
     public Matrix(int rowsize, int colsize){//initallize
       this.row = rowsize;
       this.col = colsize;
-      matrix = new Sequence(new MyInteger());
-      Sequence ptr = this.matrix;
-      for(int i = 1; i < rowsize * colsize; i++)
+
+      for(int i = 0; i < rowsize * colsize; i++)
       {
-        ptr.next = new Sequence(new MyInteger());
-        ptr = ptr.next;
+        matrix.add(new MyInteger(), i);
       }
 
+      // matrix = new Sequence(new MyInteger());
+      // Sequence ptr = this.matrix;
+      // for(int i = 1; i < rowsize * colsize; i++)
+      // {
+      //   ptr.next = new Sequence(new MyInteger());
+      //   ptr = ptr.next;
+      // }
 
+
+      // System.out.print(matrix.length());
 
       // Sequence ptr;
       // matrix = new Sequence();
@@ -45,12 +52,33 @@ public class Matrix extends Sequence{
       //
       //
       // }
-
-
     }
-    // void Set(int rowsize, int colsize, int value); // set the value of an element
-    // int Get(int rowsize, int colsize); // get the value of an element
-    // Matrix Sum(Matrix mat); // return the sum of two matrices: mat & this
-    // Matrix Product(Matrix mat); // return the product of two matrices: mat & this
-    // void Print();  // print the elements of matrix
+
+    //2 dimensional array in memory storage for M*N matrix
+    //row major: i*N+j
+    public void Set(int rowsize, int colsize, int value){
+      ((MyInteger)(this.matrix).index(rowsize * this.row + colsize)).Set(value);
+    } // set the value of an element
+
+    public int Get(int rowsize, int colsize){
+      return ((MyInteger)(this.matrix).index(rowsize * this.row + colsize)).Get();
+    } // get the value of an element
+
+    public Matrix Sum(Matrix mat){
+      Matrix result = new Matrix(row, col);
+      for(int i = 0; i < row; i++)
+        for(int j = 0; j < col; j++)
+          result.Set(i, j, this.Get(i, j) + mat.Get(i, j));
+
+      return result;
+    } // return the sum of two matrices: mat & this
+
+    public Matrix Product(Matrix mat); // return the product of two matrices: mat & this
+    public void Print(){
+      Sequence ptr = matrix;
+      while(ptr != null && ptr.element != null)
+      {
+        ((Sequence)(ptr.element)).Print();
+      }
+    }  // print the elements of matrix
 }
