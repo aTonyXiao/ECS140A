@@ -1,0 +1,21 @@
+>>=====  Testing Part 6 =====<<
+**** Test adding pairs - in reverse alpha order
+Printing contents of map:
+[ ]
+Printing contents of map2:
+[ ]
+**** Test adding pairs - add unique key pairs
+Printing contents of map after adding pairs with unique key:
+[ ]
+**** Test adding pairs - add non-unique key pair
+Printing contents of map after adding a pair with non-unique key:
+[ ]
+**** Test MapIterator
+**** Test MapIterator - cross of map and map
+**** Test MapIterator - cross of map and map2
+**** Test find method
+**** Test find method -- non-existent key
+No such pair with key '$' found.
+**** Test find method -- existent key
+No such pair with key 'J' found.
+No such pair with key 'Q' found.

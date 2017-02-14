@@ -21,7 +21,7 @@ public class MapIterator extends Element{
   }
 
   public Boolean equal(MapIterator other){
-    return this.pair == other.pair;
+    return this.pair.key.Get() == other.pair.key.Get();
   }
 
   public void advance(){

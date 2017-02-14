@@ -37,14 +37,12 @@ public class Map extends Element{
 
     while(ptr != null && ptr.key.Get() <= inval.key.Get()){
       prev = ptr;
-
+      ptr = ptr.next;
+    }
       if(prev == null) // insert at head
         firstPair = new Pair(inval.key, inval.val, firstPair);
       else
         prev.next = new Pair(inval.key, inval.val, ptr);
-
-      ptr = ptr.next;
-    }
   }
 
   public MapIterator find(MyChar key){
@@ -58,31 +56,4 @@ public class Map extends Element{
     // return null;
   }
 
-}
-
-class Pair extends Element{
-  public MyChar key;
-  public Element val;
-  public Pair next;
-
-  public Pair(){}
-
-  public Pair(MyChar key, Element val){
-      this.key = key;
-      this.val = val;
-  }
-
-  public Pair(MyChar key, Element val, Pair next){
-    this.key = key;
-    this.val = val;
-    this.next = next;
-  }
-
-  public void Print(){
-    System.out.print("(");
-    this.key.Print();
-    System.out.print(" ");
-    this.val.Print();
-    System.out.print(")");
-  }
 }
