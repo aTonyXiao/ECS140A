@@ -16,7 +16,8 @@ public class SequenceIterator{
       this.seq = res;
     }
 
-    public Boolean equal (SequenceIterator other) {
+    public Boolean equal(SequenceIterator other){
+      // return (this.seq).equalTo(other.seq);
       return this.seq == other.seq;
     }
 

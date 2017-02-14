@@ -16,6 +16,22 @@ public class Sequence extends Element{
 		length = 1;
 	}
 
+
+	// public equalTo(Sequence other){
+	// 	if(this.element == other.element)
+	// 		return true;
+	// 	else{
+	// 		if(this.seq.length() != other.seq.length())
+	// 			return false;
+	// 		Sequence ptr = this.seq, optr = other.seq;
+	// 		while(ptr != null && optr != null){
+	// 			if( !this.seq.element.equalTo(other.seq.element))
+	// 				return false;
+	// 		}
+	// 		return true;
+	// 	}
+	// }
+
 	public Sequence(Element element){
 		this.element = element;
 		this.length = 1;
