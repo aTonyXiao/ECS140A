@@ -1,0 +1,11 @@
+
+
+BNF rule:
+for ::= '{' [assignment] ‘^’ [expr] >= 0 ‘^’ [assignment] : block '}' 
+
+
+We choose this BNF because it is very similar to C. By making the default value >=0 in the condition of for loop, the program is shorter and easy understood.
+
+java stack using reference:
+http://stackoverflow.com/questions/20057673/implement-stack-using-java
+http://www.java2s.com/Tutorial/Java/0140__Collections/Tofindoutifanelementisonthestackthesearchmethod.htm
