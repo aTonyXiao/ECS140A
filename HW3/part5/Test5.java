@@ -1,6 +1,6 @@
 import java.math.*;
 
-// test matrix class 
+// test matrix class
 
 class Test5 {
 
@@ -20,7 +20,7 @@ class Test5 {
 	i_arr[0].Set(6);
 	for (int i = 1; i < 50; i++) {
 		i_arr[i] = new MyInteger();
-		i_arr[i].Set(i*i + i - i_arr[i-1].Get()*i_arr[i-1].Get());	
+		i_arr[i].Set(i*i + i - i_arr[i-1].Get()*i_arr[i-1].Get());
 	}
 
 	for (int i = 2; i < 50; i++)
@@ -122,7 +122,7 @@ class Test5 {
 
 	System.out.print("m1 * m2 = ");
 	m1.Product(m2).Print();
-	
+
    }
 
 }
