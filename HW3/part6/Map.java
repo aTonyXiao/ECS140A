@@ -48,9 +48,14 @@ public class Map extends Element{
   }
 
   public MapIterator find(MyChar key){
+    // MapIterator it;
+    Pair ptr = this.firstPair;
+    while(ptr != null && (ptr.key).Get() != key.Get()){
+      ptr = ptr.next;
+    }
 
-
-    return null;
+    return new MapIterator(ptr);
+    // return null;
   }
 
 }

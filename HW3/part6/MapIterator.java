@@ -28,8 +28,8 @@ public class MapIterator extends Element{
     this.pair = this.pair.next;
   }
 
-  public Element get(){
-    return this.pair.val;
+  public Pair get(){
+    return this.pair;
   }
 
   public void Print(){
