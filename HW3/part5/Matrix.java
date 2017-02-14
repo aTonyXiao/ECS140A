@@ -62,11 +62,11 @@ public class Matrix extends Sequence{
     //2 dimensional array in memory storage for M*N matrix
     //row major: i*N+j
     public void Set(int rowsize, int colsize, int value){
-      ((MyInteger)((this.matrix).index((rowsize) * (this.col - 1) + colsize))).Set(value);
+      ((MyInteger)((this.matrix).index(rowsize * this.col + colsize))).Set(value);
     } // set the value of an element
 
     public int Get(int rowsize, int colsize){
-      return ((MyInteger)((this.matrix).index((rowsize) * (this.col - 1) + colsize))).Get();
+      return ((MyInteger)((this.matrix).index(rowsize * this.col + colsize))).Get();
     } // get the value of an element
 
     public Matrix Sum(Matrix mat){
