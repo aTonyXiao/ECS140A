@@ -19,6 +19,7 @@ public class Map extends Element{
     while(ptr != null){
       System.out.print(" ");
       ptr.Print();
+      ptr = ptr.next;
     }
     System.out.print(" ]");
   }
@@ -32,7 +33,7 @@ public class Map extends Element{
   }
 
   public void add(Pair inval){
-    Pair ptr = firstPair;
+    Pair ptr = this.firstPair;
     Pair prev = null;
 
     while(ptr != null && ptr.key.Get() <= inval.key.Get()){
@@ -40,7 +41,7 @@ public class Map extends Element{
       ptr = ptr.next;
     }
       if(prev == null) // insert at head
-        firstPair = new Pair(inval.key, inval.val, firstPair);
+        this.firstPair = new Pair(inval.key, inval.val, this.firstPair);
       else
         prev.next = new Pair(inval.key, inval.val, ptr);
   }
