@@ -36,11 +36,11 @@
 (defun splitrue(func lista)
   (cond
     ((null lista) nil)
-    ((apply func (car lista)) (cons (car lista) (splitrue func (cdr lista))))
+    ((funcall func (car lista)) (cons (car lista) (splitrue func (cdr lista))))
     (T (splitrue func (cdr lista)))))
 
 (defun splitfalse(func lista)
   (cond
     ((null lista) nil)
-    ((not (apply func (car lista))) (cons (car lista) (splitfalse func (cdr lista)))))
-    (T (splitfalse func (cdr lista))))
+    ((not (funcall func (car lista))) (cons (car lista) (splitfalse func (cdr lista))))
+    (T (splitfalse func (cdr lista)))))
