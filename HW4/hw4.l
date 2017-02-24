@@ -1,6 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Your solution goes in this file ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;Tony Xiao Feb.23rd;;;;;;;;;;;;
+;;;;;;;;;;;;;;;Part 1;;;;;;;;;;;;;;;;;;
 ;all-length, that takes a list and counts the number of atoms that occur in a list at all levels.
 (defun all-length(lista)
   (cond
@@ -26,3 +28,19 @@
     ((null lista) nil)
     ((equal end (car lista)) (list end))
     (T (cons (car lista) (getend end (cdr lista))))))
+
+;split-if that returns a list into two parts. It takes two arguments: a function (f) and a list. All members for which f is true go into one list, and the rest go into another list.
+(defun split-if (func lista)
+  (list (splitrue func lista) (splitfalse func lista)))
+
+(defun splitrue(func lista)
+  (cond
+    ((null lista) nil)
+    ((apply func (car lista)) (cons (car lista) (splitrue func (cdr lista))))
+    (T (splitrue func (cdr lista)))))
+
+(defun splitfalse(func lista)
+  (cond
+    ((null lista) nil)
+    ((not (apply func (car lista))) (cons (car lista) (splitfalse func (cdr lista)))))
+    (T (splitfalse func (cdr lista))))
