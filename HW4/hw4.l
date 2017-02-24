@@ -4,6 +4,8 @@
 ;;;;;;;;;Tony Xiao Feb.23rd;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;Part 1;;;;;;;;;;;;;;;;;;
 ;all-length, that takes a list and counts the number of atoms that occur in a list at all levels.
+; (readable:enable-basic-curly)\
+; (set-syntax-from-char #\{ #\( )
 (defun all-length(lista)
   (cond
     ((null lista) 0)
@@ -44,3 +46,22 @@
     ((null lista) nil)
     ((not (funcall func (car lista))) (cons (car lista) (splitfalse func (cdr lista))))
     (T (splitfalse func (cdr lista)))))
+
+;group that takes arguments: a list l and a number n. It returns a new list in which the elements of l are grouped into sublists of length n. The remainder is put in a final sublist.
+(defun group(lista num)
+  (let (count (floor (/ (list-length lista) num))))
+  (let (begin 0))
+  (let (end 0))
+  (let res '())
+  (groupHelp count begin end res lista num)
+  (if (not (null (subseq lista end (length lista))))
+    (setq res (append res (list (subseq lista end (length lista))))))
+
+    res
+  )
+
+(defun groupHelp(count begin end res lista num)
+  (loop for i from 1 to count
+    do (setq end (+ begin num))
+    do (setq res (append res (list(subseq lista begin end))))
+    do (setq begin (+ begin num))))
