@@ -10,26 +10,38 @@
   (cond
     ((null lista) 0)
     ((atom lista) 1)
-    (T (+ (all-length (car lista)) (all-length (cdr lista))))))
+    ((+ (all-length (car lista)) (all-length (cdr lista))))))
+;http://stackoverflow.com/questions/26289607/is-there-anything-similar-to-return-statement-of-c-in-lisp
+;   (if (null lista) 
+;     0
+;     (if (atom lista) 
+;     1
+;     )
+;     (setf len (+ (all-length (car lista)) (all-length (cdr lista))))
+;   len
+;   )
+; )
+  
+  
 
 
 ;range that takes a list of numbers (with at least one element) and returns a list of length 2 of the smallest and largest numbers.
 (defun range(lista)
   (list (apply 'min lista) (apply 'max lista))) ;http://www.programcreek.com/2010/10/lisp-code-find-minimum-element-in-a-list/
 
-
+;; edit it 
 ;before that searches a list and returns a list of all elements in between the first two arguments (inclusive).
 (defun before(begin end lista)
   (cond
     ((null lista) nil);empty list
     ((equal begin (car lista)) (cons begin (getend end (cdr lista))))
-    (T (before begin end (cdr lista)))))
+    ((before begin end (cdr lista)))))
 
 (defun getend(end lista)
   (cond
     ((null lista) nil)
     ((equal end (car lista)) (list end))
-    (T (cons (car lista) (getend end (cdr lista))))))
+    ((cons (car lista) (getend end (cdr lista))))))
 
 ;split-if that returns a list into two parts. It takes two arguments: a function (f) and a list. All members for which f is true go into one list, and the rest go into another list.
 (defun split-if (func lista)
@@ -39,13 +51,13 @@
   (cond
     ((null lista) nil)
     ((funcall func (car lista)) (cons (car lista) (splitrue func (cdr lista))))
-    (T (splitrue func (cdr lista)))))
+    ((splitrue func (cdr lista)))))
 
 (defun splitfalse(func lista)
   (cond
     ((null lista) nil)
     ((not (funcall func (car lista))) (cons (car lista) (splitfalse func (cdr lista))))
-    (T (splitfalse func (cdr lista)))))
+    ((splitfalse func (cdr lista)))))
 
 
 ;;edit here
@@ -63,25 +75,45 @@
     do (setf end (+ begin n))
     do (setf res (append res (list(subseq l begin end))))
     do (setf begin (+ begin n)))
-  (if (not (null (subseq l end (length l))))
+  (if (not (null (subseq l end (length l)))) ; fix here
     (setf res (append res (list (subseq l end (length l))))))
 res
 )
 
-; (if (not (null (subseq lista end (length lista))))
-;   ((setf res (append res (lista (subseq lista end (length lista)))))))
 
-; res)
-
-
-;;;; edit here 
 (defun mostn(f l)
-  (setf num (reduce fun max (mapcar f l)))
   (setf res '())
+  (setf num (reduce (function max)(mapcar f l)))
+  (mostnHelp f l res num))
 
+(defun mostnHelp(f l res num)
   (loop for i in l
-    do (if (= m (funcall f i)))
-      (setf res (append res (list i))))
-  (setf res (append (list res)(list m))))
+    do (if (= num (funcall f i))
+      (setf res (append res (list i)))))
+  (setf res (append (list res) (list num)))
+  res
+  )
+;Part2
+(defun match(assertion1 assertion2)
+  (cond
+    ((and (null assertion1) (not (null assertion2))) nil); 1 nill 2 not
+    ((and (null assertion2) (not (null assertion1))) nil); 2 nill 1 not
+    ((and (null assertion1) (null assertion2)) T) ; 1,2 nil
+    ((and (not (null assertion1)) (not (null assertion2))(equal assertion1 assertion2))) ;1 2 not nill
+    ((equal (car assertion1) '?) (match (cdr assertion1) (cdr assertion2))); move to next one
+    ((equal (car assertion1) '!) (matchHelp assertion1 assertion2))
+    (T (matchDefault assertion1 assertion2))))
 
+(defun matchHelp (assertion1 assertion2); work for !
+  (if (match (cdr assertion1) (cdr assertion2))
+    T
+    (match assertion1 (cdr assertion2))
+    )
+)
+
+(defun matchDefault(assertion1 assertion2)
+  (setf facialEq (equal (car assertion1) (car assertion2)))
+  (setf deepEq (match (cdr assertion1) (cdr assertion2)))
+  (and facialEq deepEq)
+)
 
