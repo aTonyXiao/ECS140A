@@ -47,21 +47,41 @@
     ((not (funcall func (car lista))) (cons (car lista) (splitfalse func (cdr lista))))
     (T (splitfalse func (cdr lista)))))
 
-;group that takes arguments: a list l and a number n. It returns a new list in which the elements of l are grouped into sublists of length n. The remainder is put in a final sublist.
-(defun group(lista num)
-  (let (count (floor (/ (list-length lista) num))))
-  (let (begin 0))
-  (let (end 0))
-  (let res '())
-  (groupHelp count begin end res lista num)
-  (if (not (null (subseq lista end (length lista))))
-    (setq res (append res (list (subseq lista end (length lista))))))
 
-    res
+;;edit here
+;group that takes arguments: a list l and a number n. It returns a new list in which the elements of l are grouped into sublists of length n. The remainder is put in a final sublist.
+(defun group(l n)
+  (setf count(floor(/ (list-length l) n)))
+  (setf begin 0)
+  (setf end 0)
+  (setf res '())
+  (groupHelp count begin end res l n)
   )
 
-(defun groupHelp(count begin end res lista num)
+(defun groupHelp(count begin end res l n)
   (loop for i from 1 to count
-    do (setq end (+ begin num))
-    do (setq res (append res (list(subseq lista begin end))))
-    do (setq begin (+ begin num))))
+    do (setf end (+ begin n))
+    do (setf res (append res (list(subseq l begin end))))
+    do (setf begin (+ begin n)))
+  (if (not (null (subseq l end (length l))))
+    (setf res (append res (list (subseq l end (length l))))))
+res
+)
+
+; (if (not (null (subseq lista end (length lista))))
+;   ((setf res (append res (lista (subseq lista end (length lista)))))))
+
+; res)
+
+
+;;;; edit here 
+(defun mostn(f l)
+  (setf num (reduce fun max (mapcar f l)))
+  (setf res '())
+
+  (loop for i in l
+    do (if (= m (funcall f i)))
+      (setf res (append res (list i))))
+  (setf res (append (list res)(list m))))
+
+
