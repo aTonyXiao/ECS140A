@@ -7,23 +7,11 @@
 ; (readable:enable-basic-curly)\
 ; (set-syntax-from-char #\{ #\( )
 (defun all-length(lista)
+  (setf res 0)
   (cond
     ((null lista) 0)
     ((atom lista) 1)
-    ((+ (all-length (car lista)) (all-length (cdr lista))))))
-;http://stackoverflow.com/questions/26289607/is-there-anything-similar-to-return-statement-of-c-in-lisp
-;   (if (null lista) 
-;     0
-;     (if (atom lista) 
-;     1
-;     )
-;     (setf len (+ (all-length (car lista)) (all-length (cdr lista))))
-;   len
-;   )
-; )
-  
-  
-
+    (T (setf res (+ (all-length (car lista)) (all-length (cdr lista))))))res)
 
 ;range that takes a list of numbers (with at least one element) and returns a list of length 2 of the smallest and largest numbers.
 (defun range(lista)
@@ -34,14 +22,14 @@
 (defun before(begin end lista)
   (cond
     ((null lista) nil);empty list
-    ((equal begin (car lista)) (cons begin (getend end (cdr lista))))
+    ((equal begin (car lista)) (cons begin (beforeHelp end (cdr lista))))
     ((before begin end (cdr lista)))))
 
-(defun getend(end lista)
+(defun beforeHelp(end lista)
   (cond
     ((null lista) nil)
     ((equal end (car lista)) (list end))
-    ((cons (car lista) (getend end (cdr lista))))))
+    ((cons (car lista) (beforeHelp end (cdr lista))))))
 
 ;split-if that returns a list into two parts. It takes two arguments: a function (f) and a list. All members for which f is true go into one list, and the rest go into another list.
 (defun split-if (func lista)
@@ -80,7 +68,7 @@
 res
 )
 
-
+;might here
 (defun mostn(f l)
   (setf res '())
   (setf num (reduce (function max)(mapcar f l)))
@@ -93,27 +81,45 @@ res
   (setf res (append (list res) (list num)))
   res
   )
-;Part2
+
+;;;;;;;;;;;;;;;;;;;;Part2;;;;;;;;;;;;;;;;;;
+;match that compares a pattern and an assertion. 
 (defun match(assertion1 assertion2)
   (cond
     ((and (null assertion1) (not (null assertion2))) nil); 1 nill 2 not
     ((and (null assertion2) (not (null assertion1))) nil); 2 nill 1 not
     ((and (null assertion1) (null assertion2)) T) ; 1,2 nil
     ((and (not (null assertion1)) (not (null assertion2))(equal assertion1 assertion2))) ;1 2 not nill
-    ((equal (car assertion1) '?) (match (cdr assertion1) (cdr assertion2))); move to next one
+    ((equal (car assertion1) '?) (matchQues assertion1 assertion2)); move to next one
     ((equal (car assertion1) '!) (matchHelp assertion1 assertion2))
     (T (matchDefault assertion1 assertion2))))
 
 (defun matchHelp (assertion1 assertion2); work for !
-  (if (match (cdr assertion1) (cdr assertion2))
-    T
-    (match assertion1 (cdr assertion2))
-    )
-)
+  (if (match (cdr assertion1) (cdr assertion2)) T (match assertion1 (cdr assertion2))))
+
+(defun matchQues(assertion1 assertion2)
+  (match (cdr assertion1) (cdr assertion2)))
 
 (defun matchDefault(assertion1 assertion2)
   (setf facialEq (equal (car assertion1) (car assertion2)))
   (setf deepEq (match (cdr assertion1) (cdr assertion2)))
-  (and facialEq deepEq)
+  (and facialEq deepEq))
+
+
+;;;;;;;;;;;;;;;;part3;;;;;;;;;;;;;;
+;match-var that extends match. The function match-var takes patterns con- taining pattern variables and matches them against assertions and assigns values to variables.
+
+(defun match-var(pattern assertion)
+  (cond
+    ((and (null pattern) (not (null assertion2))) nil); 1 nill 2 not
+    ((and (null assertion2) (not (null pattern))) nil); 2 nill 1 not
+    ((and (null pattern) (null assertion2)) T) ; 1,2 nil
+
+
+
+  )
+
 )
+
+
 
