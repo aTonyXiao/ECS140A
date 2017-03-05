@@ -62,9 +62,8 @@
 
 ;might here
 (defun mostn(f l)
-  (setf res '())
   (setf num (reduce (function max)(mapcar f l)))
-  (mostnHelp f l res num))
+  (mostnHelp f l () num))
 
 (defun mostnHelp(f l res num)
   (loop for i in l
