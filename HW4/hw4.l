@@ -33,40 +33,32 @@
 
 ;split-if that returns a list into two parts. It takes two arguments: a function (f) and a list. All members for which f is true go into one list, and the rest go into another list.
 (defun split-if (func lista)
-  (list (splitfalse func lista)(splitrue func lista)))
-
-(defun splitrue(func lista)
-  (cond
-    ((null lista) nil)
-    ((funcall func (car lista)) (cons (car lista) (splitrue func (cdr lista))))
-    ((splitrue func (cdr lista)))))
-
-(defun splitfalse(func lista)
-  (cond
-    ((null lista) nil)
-    ((not (funcall func (car lista))) (cons (car lista) (splitfalse func (cdr lista))))
-    ((splitfalse func (cdr lista)))))
-
+  (list (remove-if func lista) (remove-if-not func lista)))
 
 ;;edit here
 ;group that takes arguments: a list l and a number n. It returns a new list in which the elements of l are grouped into sublists of length n. The remainder is put in a final sublist.
 (defun group(l n)
-  (setf count(floor(/ (list-length l) n)))
-  (setf begin 0)
-  (setf end 0)
-  (setf res '())
-  (groupHelp count begin end res l n)
-  )
-
-(defun groupHelp(count begin end res l n)
-  (loop for i from 1 to count
-    do (setf end (+ begin n))
-    do (setf res (append res (list(subseq l begin end))))
-    do (setf begin (+ begin n)))
-  (if (not (null (subseq l end (length l)))) ; fix here
-    (setf res (append res (list (subseq l end (length l))))))
-res
+  (group2 l 'nil n n )
 )
+
+(defun group2(oldList newList n countDown)
+  (cond
+    ((null oldList) newList)
+    ((and (equal n countDown) (null newList)) (group2 (cdr oldList) (list (group3 oldList n)) n (- countDown 1)))
+    ((equal n countDown) (group2 (cdr oldList) (append newList (list (group3 oldList n))) n (- countDown 1)))
+    ((equal countDown 0) (group2 oldList newList n n))
+    (t (group2 (cdr oldList) newList n (- countDown 1)))
+  )
+)
+
+(defun group3(oldList countDown)
+  (cond
+    ((null oldList) nil)
+    ((equal 0 countDown) nil)
+    (t  (cons (car oldList) (group3 (cdr oldList) (- countDown 1))))
+  )
+)
+
 
 ;might here
 (defun mostn(f l)
@@ -109,38 +101,44 @@ res
 ;;;;;;;;;;;;;;;;part3;;;;;;;;;;;;;;
 ;match-var that extends match. The function match-var takes patterns con- taining pattern variables and matches them against assertions and assigns values to variables.
 
-; (defun match-var(pattern assertion)
-;   (cond
-;     ((and (null pattern) (not (null assertion2))) nil); 1 nill 2 not
-;     ((and (null assertion2) (not (null pattern))) nil); 2 nill 1 not
-;     ((and (null pattern) (null assertion2)) T) ; 1,2 nil
-
-
-
-;   )
-
-; )
-(defun match-var (l1 l2)
+(defun match-var(pattern assertion)
   (cond
-    ((or (null l1) (null l2)) (equal l1 l2))
-    ((and (atom (car l1)) (atom (car l2))) (and (equal (car l1) (car l2)) (match-var (cdr l1) (cdr l2))))
-    ((equal (caar l1) '?) (set (cadar l1) (car l2)) (match-var (cdr l1) (cdr l2)))
-    ((and (listp (car l1)) (equal (caar l1) '!)
-      (cond
-        ((not (boundp (cadar l1))) (set (cadar l1) (list(car l2))))
-        ((listp (eval(cadar l1))) (set (cadar l1) (append (eval (cadar l1)) (list(car l2)))))
-        ((set (cadar l1) (list(car l2))))
-      )
-    
-      (match-var (cdr l1) (cdr l2)))
-    )
-    
-    ((equal (caar l1) '!)   
-      (cond ((not (boundp (cadar l1))) (set (cadar l1) (list(car l2)))))
-      (match-var l1 (cdr l2))
-    )
-  )
+    ((and (null pattern) (not (null assertion))) nil); 1 nill 2 not
+    ((and (null assertion) (not (null pattern))) nil); 2 nill 1 not
+    ((and (null pattern) (null assertion)) T) ; 1,2 nil
+
+    ((and (equal(car pattern)(car assertion)) (match-var(cdr pattern) (cdr assertion))))
+
+    ((equal (caar pattern) '?) (match-varQues pattern assertion));(? V) when facing ?
+    ((equal (caar pattern) '!) (match-varExclam pattern assertion));(! V) when dealing with !
+    (T (match-varDefault pattern assertion))))
+
+
+
+
+(defun match-varQues(pattern assertion)
+  (set (cadar pattern) (car assertion))
+  (match-var (cdr pattern) (cdr assertion)))
+
+(defun match-varDefault(pattern assertion)
+  (setf facialEq (equal (car pattern) (car assertion)))
+  (setf deepEq (match-var (cdr pattern) (cdr assertion)))
+  (and facialEq deepEq))
+
+(defun match-varExclam(pattern assertion)
+
+;;;;; implement this;;;;;;
+
 )
 
 
 
+
+
+
+
+
+
+
+
+  

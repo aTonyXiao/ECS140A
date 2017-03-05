@@ -281,49 +281,7 @@ testing:  (EVAL 'B)
 value:    3
 
 testing:  (MATCH-VAR '((! U) A (? V)) '(B C A D))
-value:    T
-
-testing:  (EVAL 'U)
-value:    (B C)
-
-testing:  (EVAL 'V)
-value:    D
-
-testing:  (MATCH-VAR '((! U) (? V) C (! W)) '(B C A D))
 value:    NIL
 
-testing:  (MATCH-VAR '(A (! U) A (? V) A (! W)) '(A A A A B A A))
-value:    T
-
 testing:  (EVAL 'U)
-value:    (B C B C A D A A)
-
-testing:  (EVAL 'V)
-value:    B
-
-testing:  (EVAL 'W)
-value:    (A)
-
-testing:  
-(MATCH-VAR '(NIL (! U) (! V) (? W) NIL (! Y) A A)
- '(NIL NIL A NIL NIL A A NIL A A))
-value:    T
-
-testing:  (EVAL 'U)
-value:    (B C B C A D A A NIL)
-
-testing:  (EVAL 'V)
-value:    (A)
-
-testing:  (EVAL 'W)
-value:    NIL
-
-testing:  (EVAL 'Y)
-value:    (A A NIL)
-
-testing:  (MATCH-VAR '(NIL (! U) (! V) (? W) NIL (! Y) A A) '(NIL A NIL NIL A A NIL A A))
-value:    NIL
-
-
-          DONE TESTING
-
+value:    
