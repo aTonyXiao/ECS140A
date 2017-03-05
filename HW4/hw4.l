@@ -100,44 +100,42 @@
 ;;;;;;;;;;;;;;;;part3;;;;;;;;;;;;;;
 ;match-var that extends match. The function match-var takes patterns con- taining pattern variables and matches them against assertions and assigns values to variables.
 
-(defun match-var(pattern assertion)
+(defun match-var(pattern assertion &optional N)
   (cond
     ((and (null pattern) (not (null assertion))) nil); 1 nill 2 not
     ((and (null assertion) (not (null pattern))) nil); 2 nill 1 not
     ((and (null pattern) (null assertion)) T) ; 1,2 nil
-
-    ((and (equal(car pattern)(car assertion)) (match-var(cdr pattern) (cdr assertion))))
-
-    ((equal (caar pattern) '?) (match-varQues pattern assertion));(? V) when facing ?
-    ((equal (caar pattern) '!) (match-varExclam pattern assertion));(! V) when dealing with !
-    (T (match-varDefault pattern assertion))))
-
-
+    ((and (listp (car pattern)) (eq (caar pattern) '?))
+      (match-varQues pattern assertion))
+    ((match-varExclamDetermin pattern assertion N)
+        (match-varExclam pattern assertion N))  
+    ((match-varExclamDetermin2 pattern assertion N)
+        (match-varExclam2 pattern assertion N))
+    (T (match-varDefault pattern assertion N))))
 
 
 (defun match-varQues(pattern assertion)
-  (set (cadar pattern) (car assertion))
+  (set (cadar pattern)  (car assertion)) 
   (match-var (cdr pattern) (cdr assertion)))
 
-(defun match-varDefault(pattern assertion)
-  (setf facialEq (equal (car pattern) (car assertion)))
-  (setf deepEq (match-var (cdr pattern) (cdr assertion)))
-  (and facialEq deepEq))
+(defun match-varExclamDetermin2(pattern assertion N)
+  (setf res (and (listp (car pattern)) (eq (caar pattern) '!)))res)
 
-(defun match-varExclam(pattern assertion)
+(defun match-varExclamDetermin(pattern assertion N)
+  (setf deter (and (listp (car pattern)) (eq (caar pattern) '!)
+  (match-var (cdr pattern) (cdr assertion))))
+  deter)
 
-;;;;; implement this;;;;;;
+(defun match-varExclam(pattern assertion N)
+  (set (cadar pattern) nil)
+  ; (set tmp (car assertion))
+  (set (cadar pattern) (append N (list (car assertion))))T)
 
-)
+(defun match-varExclam2(pattern assertion N)
+  (set (cadar pattern) nil) 
+  (set (cadar pattern)(append (eval (cadar pattern)) N (list (car assertion))))   
+  (match-var pattern (cdr assertion) (eval (cadar pattern))))
 
-
-
-
-
-
-
-
-
-
-
-  
+(defun match-varDefault(pattern assertion N)
+  (setf res (and (eq (car pattern) (car assertion)) (match-var (cdr pattern) (cdr assertion))))
+  res)  
