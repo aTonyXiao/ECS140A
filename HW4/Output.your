@@ -8,19 +8,19 @@ testing:  (ALL-LENGTH NIL)
 value:    0
 
 testing:  (ALL-LENGTH '(A B C D E F))
-value:    0
+value:    6
 
 testing:  (ALL-LENGTH '((1 2 3) (4 5 6)))
-value:    0
+value:    6
 
 testing:  (ALL-LENGTH '(G NIL H (X Y Z NIL)))
-value:    0
+value:    5
 
 testing:  (ALL-LENGTH '(A (B C) (D (E F))))
-value:    0
+value:    6
 
 testing:  (ALL-LENGTH '(NIL (NIL NIL) (A A (0 (((0))) ((NIL)) (((NIL A)))))))
-value:    0
+value:    5
 
 
                     TEST-Range
@@ -83,28 +83,28 @@ testing:  (SPLIT-IF #'NULL 'NIL)
 value:    (NIL NIL)
 
 testing:  (SPLIT-IF #'LISTP '(1 2 3 NIL (A B) X (HI BYE) Z D))
-value:    ((NIL (A B) (HI BYE)) (1 2 3 X Z D))
+value:    ((1 2 3 X Z D) (NIL (A B) (HI BYE)))
 
 testing:  (SPLIT-IF #'ATOM '(A B C D E F NIL H I J NIL L NIL NIL))
-value:    ((A B C D E F NIL H I J NIL L NIL NIL) NIL)
+value:    (NIL (A B C D E F NIL H I J NIL L NIL NIL))
 
 testing:  
 (SPLIT-IF
  #'(LAMBDA (X) (DECLARE (SOURCE ((X) (NOT (= 0 (MOD X 3))))))
     (NOT (= 0 (MOD X 3))))
  '(0 22 1 4 9 5 3 6 7 11 33 12 99))
-value:    ((22 1 4 5 7 11) (0 9 3 6 33 12 99))
+value:    ((0 9 3 6 33 12 99) (22 1 4 5 7 11))
 
 testing:  
 (SPLIT-IF #'(LAMBDA (X) (DECLARE (SOURCE ((X) (> X 80)))) (> X 80))
  '(55 66 22 100 99 89 78 83 72 69))
-value:    ((100 99 89 83) (55 66 22 78 72 69))
+value:    ((55 66 22 78 72 69) (100 99 89 83))
 
 testing:  
 (SPLIT-IF
  #'(LAMBDA (X) (DECLARE (SOURCE ((X) (> (CADR X) 70)))) (> (CADR X) 70))
  '((BOB 70) (LEE 60) (SALLY 88) (MIKE 90) (LISA 100) (DAN 99)))
-value:    (((SALLY 88) (MIKE 90) (LISA 100) (DAN 99)) ((BOB 70) (LEE 60)))
+value:    (((BOB 70) (LEE 60)) ((SALLY 88) (MIKE 90) (LISA 100) (DAN 99)))
 
 testing:  
 (SPLIT-IF
@@ -113,8 +113,8 @@ testing:
  '((YELLOW SARA JUN) (BLUE DAVE FRES) (GREEN CHRIS SEN) (BLACK LARS SEN)
    (RED MELISSA SOP) (YELLOW KEN SEN) (YELLOW HOLLY SEN)))
 value:    
-(((YELLOW SARA JUN) (YELLOW KEN SEN) (YELLOW HOLLY SEN))
- ((BLUE DAVE FRES) (GREEN CHRIS SEN) (BLACK LARS SEN) (RED MELISSA SOP)))
+(((BLUE DAVE FRES) (GREEN CHRIS SEN) (BLACK LARS SEN) (RED MELISSA SOP))
+ ((YELLOW SARA JUN) (YELLOW KEN SEN) (YELLOW HOLLY SEN)))
 
 testing:  
 (SPLIT-IF
@@ -123,9 +123,9 @@ testing:
    (VANILLA CHOCOLATE STRAWBERRY) (BOO) (X Y Z U V W) (FOO BOO BAR FOO BOO) (E)
    (I AM DONE)))
 value:    
-(((10 6 5 43 2) (HELLO HOW ARE YOU) (X Y Z U V W) (FOO BOO BAR FOO BOO))
- ((1 2 3) (33) (0 A B) NIL (A B C) (VANILLA CHOCOLATE STRAWBERRY) (BOO) (E)
-  (I AM DONE)))
+(((1 2 3) (33) (0 A B) NIL (A B C) (VANILLA CHOCOLATE STRAWBERRY) (BOO) (E)
+  (I AM DONE))
+ ((10 6 5 43 2) (HELLO HOW ARE YOU) (X Y Z U V W) (FOO BOO BAR FOO BOO)))
 
 
                     TEST-group
@@ -221,7 +221,7 @@ testing:  (MATCH '(! TABLE IS ROUND) '(THIS TABLE))
 value:    NIL
 
 testing:  (MATCH '(THIS ! ROUND) '(THIS TABLE IS ROUND))
-value:    NIL
+value:    T
 
 testing:  (MATCH '(IS THAT FINE ?) '(THAT FINE TOO))
 value:    NIL
@@ -272,4 +272,58 @@ value:    NIL
                     TEST-Match-Var
 
 testing:  (MATCH-VAR '(PLUS (? A) (? B)) '(PLUS 2 3))
-value:    
+value:    T
+
+testing:  (EVAL 'A)
+value:    2
+
+testing:  (EVAL 'B)
+value:    3
+
+testing:  (MATCH-VAR '((! U) A (? V)) '(B C A D))
+value:    T
+
+testing:  (EVAL 'U)
+value:    (B C)
+
+testing:  (EVAL 'V)
+value:    D
+
+testing:  (MATCH-VAR '((! U) (? V) C (! W)) '(B C A D))
+value:    NIL
+
+testing:  (MATCH-VAR '(A (! U) A (? V) A (! W)) '(A A A A B A A))
+value:    T
+
+testing:  (EVAL 'U)
+value:    (B C B C A D A A)
+
+testing:  (EVAL 'V)
+value:    B
+
+testing:  (EVAL 'W)
+value:    (A)
+
+testing:  
+(MATCH-VAR '(NIL (! U) (! V) (? W) NIL (! Y) A A)
+ '(NIL NIL A NIL NIL A A NIL A A))
+value:    T
+
+testing:  (EVAL 'U)
+value:    (B C B C A D A A NIL)
+
+testing:  (EVAL 'V)
+value:    (A)
+
+testing:  (EVAL 'W)
+value:    NIL
+
+testing:  (EVAL 'Y)
+value:    (A A NIL)
+
+testing:  (MATCH-VAR '(NIL (! U) (! V) (? W) NIL (! Y) A A) '(NIL A NIL NIL A A NIL A A))
+value:    NIL
+
+
+          DONE TESTING
+

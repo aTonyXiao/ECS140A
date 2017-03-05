@@ -11,7 +11,7 @@
   (cond
     ((null lista) 0)
     ((atom lista) 1)
-    (T (setf res (+ (all-length (car lista)) (all-length (cdr lista))))))res)
+    (T (setf res (+ (all-length (car lista)) (all-length (cdr lista)))))))
 
 ;range that takes a list of numbers (with at least one element) and returns a list of length 2 of the smallest and largest numbers.
 (defun range(lista)
@@ -33,7 +33,7 @@
 
 ;split-if that returns a list into two parts. It takes two arguments: a function (f) and a list. All members for which f is true go into one list, and the rest go into another list.
 (defun split-if (func lista)
-  (list (splitrue func lista) (splitfalse func lista)))
+  (list (splitfalse func lista)(splitrue func lista)))
 
 (defun splitrue(func lista)
   (cond
@@ -86,10 +86,10 @@ res
 ;match that compares a pattern and an assertion. 
 (defun match(assertion1 assertion2)
   (cond
+    ; ((and (not (null assertion1)) (not (null assertion2)))) ;1 2 not nill
     ((and (null assertion1) (not (null assertion2))) nil); 1 nill 2 not
     ((and (null assertion2) (not (null assertion1))) nil); 2 nill 1 not
     ((and (null assertion1) (null assertion2)) T) ; 1,2 nil
-    ((and (not (null assertion1)) (not (null assertion2))(equal assertion1 assertion2))) ;1 2 not nill
     ((equal (car assertion1) '?) (matchQues assertion1 assertion2)); move to next one
     ((equal (car assertion1) '!) (matchHelp assertion1 assertion2))
     (T (matchDefault assertion1 assertion2))))
@@ -109,16 +109,37 @@ res
 ;;;;;;;;;;;;;;;;part3;;;;;;;;;;;;;;
 ;match-var that extends match. The function match-var takes patterns con- taining pattern variables and matches them against assertions and assigns values to variables.
 
-(defun match-var(pattern assertion)
+; (defun match-var(pattern assertion)
+;   (cond
+;     ((and (null pattern) (not (null assertion2))) nil); 1 nill 2 not
+;     ((and (null assertion2) (not (null pattern))) nil); 2 nill 1 not
+;     ((and (null pattern) (null assertion2)) T) ; 1,2 nil
+
+
+
+;   )
+
+; )
+(defun match-var (l1 l2)
   (cond
-    ((and (null pattern) (not (null assertion2))) nil); 1 nill 2 not
-    ((and (null assertion2) (not (null pattern))) nil); 2 nill 1 not
-    ((and (null pattern) (null assertion2)) T) ; 1,2 nil
-
-
-
+    ((or (null l1) (null l2)) (equal l1 l2))
+    ((and (atom (car l1)) (atom (car l2))) (and (equal (car l1) (car l2)) (match-var (cdr l1) (cdr l2))))
+    ((equal (caar l1) '?) (set (cadar l1) (car l2)) (match-var (cdr l1) (cdr l2)))
+    ((and (listp (car l1)) (equal (caar l1) '!)
+      (cond
+        ((not (boundp (cadar l1))) (set (cadar l1) (list(car l2))))
+        ((listp (eval(cadar l1))) (set (cadar l1) (append (eval (cadar l1)) (list(car l2)))))
+        ((set (cadar l1) (list(car l2))))
+      )
+    
+      (match-var (cdr l1) (cdr l2)))
+    )
+    
+    ((equal (caar l1) '!)   
+      (cond ((not (boundp (cadar l1))) (set (cadar l1) (list(car l2)))))
+      (match-var l1 (cdr l2))
+    )
   )
-
 )
 
 
