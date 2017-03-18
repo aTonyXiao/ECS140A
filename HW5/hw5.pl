@@ -82,7 +82,7 @@ allpreHelp2(Course,All_Prereq) :- course(Course,Pre,Units),(member(All_Prereq,Pr
 /**    Part 2   **/
 /*******************************************/
 all_length(H,Len):- H = [], Len is 0. %when empty give len 0
-all_length([H|T],Len) :- atom(H), all_length(T,RestLen), Len is RestLen + 1. % Head is an atom
+all_length([H|T],Len) :- atom(H) -> all_length(T,RestLen), Len is RestLen + 1. % Head is an atom
 all_length([[H|HT] |T], Len) :- all_length([H|HT],RestHeadLen),all_length(T,RestTailLen),Len is RestHeadLen + RestTailLen.%recursive call
 
 % equal_a_b(L):- equalHelp(L,0,0).
@@ -126,27 +126,27 @@ goodHelp(A):- A = [0].
 opposite(left,right).
 opposite(right,left).
 % take(Atom,OneSide,Other):-opposite(OneSide,Other).
-take(Instance,Position,Other).
-
-printPath(state(left,left,N,left)):- write('take(goat, '),write(N),write(', '),opposite(N,Y),write(Y),write(')'),nl.
+take(Instance,Position,Other):-opposite(Position,Other).
+printPath(state(left,left,N,left)):- safe(left,left,left,left),write('take(goat, '),write(N),write(', '),opposite(N,Y),write(Y),write(')'),nl.
 %nothing r2l
 go(A, B,Rec):-Rec =:= 1 -> printPath2(A), Rec is Rec + 1.
-
 arc(take(none,left,right),state(left,_,_,_),state(right,_,_,_)):-take(none,left,right).
-hist(N):- write('take(none, '), opposite(N,X), write(X),write(', ') ,write(N),write(')'),nl,  write('take(wolf, '),write(N),write(', '), write(X),write(')'), nl,
-% arc(X,D),
-write('take(goat, '), write(X), write(', '),write(N),write(')'),nl,
+hist(N):- safe(N,left,X,left),write('take(none, '), opposite(N,X), write(X),write(', ') ,write(N),write(')'),nl,
+safe(X,N,right,N)-> write('take(wolf, '),
+% arc(Tmp,State0,)
+write(N),write(', '), write(X),write(')'), nl,
+safe(N,N,X,N)-> write('take(goat, '), write(X), write(', '),write(N),write(')'),nl,
 arcHis(X).
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% haven't figure out, gonna regrade about this%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 arcHis(X):-
 opposite(X,Oppo),
 arc(Tmp,Var,State2,0),nl,
 safe(X,left,right,left)-> arc(State3,Sate2,State0,1),nl,
 \+ safe(left,right,right,X)-> printPath(state(left,left,Oppo,left)).
 %wolfr2l
-arc(take(wolf,left,right),state(left,left,_,_),state(right,right,_,_)):-take(wolf,left,right).
+arc(take(wolf,left,right),state(left,left,_,_),state(right,right,_,_)):-take(wolf,left,right),write('take(wolf, ').
 %goatr2l
 arc(take(goat,left,right),state(left,_,left,_),state(right,_,right,_)):-take(goat,left,right).
 %cabr2l
