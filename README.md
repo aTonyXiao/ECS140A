@@ -1,3 +1,4 @@
 # ECS140A (Su ZhenDong)
-Winter 2017
-Author: TonyXiao
+## Winter 2017
+## Author: 
+* TonyXiao
